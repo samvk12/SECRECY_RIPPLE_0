@@ -1,0 +1,991 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Secrecy Ripple</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..800&family=Figtree:ital,wght@0,400..700;1,400..600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a deep-water stage. One chapter at a time, paged like a talk (arrows, swipe, dots); a live ripple field behind everything. Coral = sealed, aqua = disclosed, amber = held in confidence. Single dark world by choice. */
+:root {
+  color-scheme: dark;
+  --deep: #061A21;
+  --deep-2: #0A2530;
+  --panel: #0D2D38;
+  --line: #1E4855;
+  --text: #E3F0EC;
+  --muted: #93B6B1;
+  --faint: #5F8781;
+  --aqua: #6FE2D0;
+  --coral: #FF8E6E;
+  --amber: #F3C56B;
+  --lilac: #B8A8FF;
+
+  --f-display: "Unbounded", "Arial Black", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { background: var(--deep); color: var(--text); font-family: var(--f-body); font-size: 16.5px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: var(--aqua); text-underline-offset: 3px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--aqua); outline-offset: 3px; border-radius: 6px; }
+p { margin: 0; }
+.mono { font-family: var(--f-mono); }
+.tag { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.tnum { font-variant-numeric: tabular-nums; }
+
+#field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.glow { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(120% 80% at 50% 120%, color-mix(in srgb, var(--aqua) 10%, transparent), transparent 60%), radial-gradient(80% 60% at 0% 0%, color-mix(in srgb, var(--deep-2) 90%, transparent), transparent 70%); }
+
+/* ---------- chrome ---------- */
+.bar-top { position: fixed; inset: 0 0 auto; z-index: 5; padding-top: calc(env(safe-area-inset-top, 0px) + 14px); padding-bottom: 14px; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); display: flex; justify-content: space-between; align-items: center; gap: 12px; background: linear-gradient(var(--deep) 55%, transparent); }
+.brand { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+.brand b { font-family: var(--f-display); font-weight: 500; font-size: 14px; letter-spacing: -.01em; white-space: nowrap; }
+.brand span { font-family: var(--f-mono); font-size: 11.5px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top-actions { display: flex; gap: 8px; align-items: center; }
+.ghost { background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font-family: var(--f-mono); font-size: 12px; color: var(--text); min-height: 36px; transition: border-color .2s, background .2s; }
+.ghost:hover { border-color: var(--aqua); }
+@media (max-width: 560px) { .brand span { display: none; } }
+
+.bar-bot { position: fixed; inset: auto 0 0; z-index: 5; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); padding-top: 22px; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 16px; align-items: center; background: linear-gradient(transparent, var(--deep) 45%); }
+.navbtn { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: var(--deep-2); display: grid; place-items: center; transition: border-color .2s, transform .2s; }
+.navbtn:hover:not(:disabled) { border-color: var(--aqua); transform: scale(1.05); }
+.navbtn:disabled { opacity: .3; cursor: default; }
+.navbtn svg { width: 18px; height: 18px; stroke: var(--text); fill: none; stroke-width: 2; }
+.dots { display: flex; justify-content: center; align-items: center; gap: 6px; min-width: 0; }
+.dots button { width: 30px; height: 30px; border: 0; background: transparent; display: grid; place-items: center; padding: 0; }
+.dots button i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); transition: all .3s; }
+.dots button[aria-current="step"] i { width: 26px; border-radius: 6px; background: var(--aqua); }
+.dots button:hover i { background: var(--muted); }
+.chap-name { font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); text-align: center; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 480px) { .dots button { width: 22px; } .dots button[aria-current="step"] i { width: 18px; } }
+
+/* ---------- stage ---------- */
+.stage { position: relative; z-index: 1; min-height: 100%; padding-top: calc(env(safe-area-inset-top, 0px) + 92px); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 130px); padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.ch { max-width: 1180px; margin: 0 auto; display: grid; gap: 34px; scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 92px); }
+.ch.enter { animation: rise .6s cubic-bezier(.2,.7,.2,1); }
+@keyframes rise { from { opacity: .25; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .ch.enter { animation: none; } }
+.ch-head { display: grid; gap: 12px; max-width: 900px; }
+.ch-no { font-family: var(--f-mono); font-size: 12px; color: var(--aqua); letter-spacing: .1em; }
+h1, h2 { margin: 0; font-family: var(--f-display); font-weight: 300; letter-spacing: -.035em; line-height: 1.02; text-wrap: balance; }
+h1 { font-size: clamp(2.3rem, 6.6vw, 5.4rem); font-weight: 250; }
+h2 { font-size: clamp(1.8rem, 4.2vw, 3.3rem); }
+h3 { margin: 0; font-family: var(--f-display); font-weight: 500; font-size: 1.15rem; letter-spacing: -.015em; line-height: 1.25; text-wrap: balance; }
+.lead { font-size: 1.15rem; color: var(--muted); max-width: 62ch; }
+.lead strong { color: var(--text); font-weight: 600; }
+.coral { color: var(--coral); }
+.aqua { color: var(--aqua); }
+em.hl { font-style: normal; font-weight: 500; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: center; }
+.two.wide-left { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+@media (max-width: 900px) { .two, .two.wide-left { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
+.panel { background: color-mix(in srgb, var(--panel) 82%, transparent); border: 1px solid var(--line); border-radius: 22px; padding: 24px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.cite { font-family: var(--f-mono); font-size: .72em; vertical-align: super; line-height: 0; text-decoration: none; color: var(--aqua); margin-left: 2px; background: none; border: 0; padding: 0; cursor: pointer; }
+.cite:hover { text-decoration: underline; }
+
+/* pills / segmented */
+.seg { display: inline-flex; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--deep-2); gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; border-radius: 999px; padding: 8px 16px; font-family: var(--f-mono); font-size: 12px; min-height: 36px; color: var(--muted); transition: background .2s, color .2s; }
+.seg button[aria-pressed="true"] { background: var(--text); color: var(--deep); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line); background: var(--deep-2); border-radius: 999px; padding: 8px 14px; font-family: var(--f-mono); font-size: 12px; min-height: 38px; color: var(--text); transition: border-color .2s, background .2s; text-align: left; }
+.chip:hover { border-color: var(--muted); }
+.chip[aria-pressed="true"] { border-color: var(--aqua); background: color-mix(in srgb, var(--aqua) 14%, var(--deep-2)); }
+
+/* ---------- cover ---------- */
+.cover { min-height: calc(100vh - 260px); align-content: center; }
+.cover h1 .coral, .cover h1 .aqua { font-weight: 500; }
+.cover-meta { display: flex; flex-wrap: wrap; gap: 10px 26px; }
+.cover-meta div { display: grid; gap: 2px; }
+.cover-meta b { font-family: var(--f-mono); font-weight: 500; font-size: 13px; }
+.cta { display: inline-flex; align-items: center; gap: 12px; background: var(--aqua); color: var(--deep); border: 0; border-radius: 999px; padding: 14px 22px; font-family: var(--f-display); font-weight: 500; font-size: 14px; justify-self: start; transition: transform .2s; }
+.cta:hover { transform: translateX(4px); }
+.hint { font-family: var(--f-mono); font-size: 12px; color: var(--faint); }
+kbd { font-family: var(--f-mono); font-size: 11px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; color: var(--muted); }
+
+/* ---------- ripple arcs ---------- */
+.arcs svg { width: 100%; height: auto; display: block; }
+.arc { fill: none; stroke-width: 34; cursor: pointer; transition: stroke-opacity .3s, stroke .3s; }
+.arc:focus { outline: none; }
+.arc:focus-visible { stroke: var(--text); }
+.arc-label { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; fill: var(--text); pointer-events: none; }
+.stone-label { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; fill: var(--deep); pointer-events: none; font-weight: 600; }
+.reach { display: grid; gap: 10px; }
+.reach-list { display: grid; gap: 6px; }
+.reach-list button { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; text-align: left; border: 1px solid transparent; background: transparent; border-radius: 14px; padding: 10px 12px; align-items: baseline; }
+.reach-list button span:first-child { font-family: var(--f-mono); font-size: 11.5px; color: var(--faint); }
+.reach-list button span:last-child { font-family: var(--f-display); font-weight: 400; font-size: 1rem; }
+.reach-list button[aria-pressed="true"] { border-color: var(--line); background: var(--panel); }
+.reach-list button[aria-pressed="true"] span:first-child { color: var(--aqua); }
+.reach-detail p { color: var(--muted); font-size: 15px; }
+
+/* ---------- access rings ---------- */
+.rings svg { width: 100%; max-width: 520px; height: auto; display: block; margin: 0 auto; }
+.ring { fill: none; cursor: pointer; transition: stroke .35s, stroke-opacity .35s; }
+.ring:focus { outline: none; }
+.ring:focus-visible { stroke: var(--text) !important; }
+.ring-label { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; pointer-events: none; fill: var(--text); }
+.ring-sel { fill: none; stroke: var(--text); stroke-width: 1.5; stroke-dasharray: 2 5; pointer-events: none; transition: r .35s; }
+.key { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); }
+.key span { display: inline-flex; gap: 7px; align-items: center; }
+.key i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.items { display: grid; gap: 8px; margin-top: 6px; }
+.item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.item:last-child { border-bottom: 0; }
+.item .nm { font-size: 14.5px; font-weight: 600; }
+.item .bs { grid-column: 1 / -1; font-family: var(--f-mono); font-size: 11.5px; color: var(--faint); }
+.item .tx { grid-column: 1 / -1; font-size: 14px; color: var(--muted); }
+.st { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; border-radius: 999px; padding: 3px 9px; white-space: nowrap; border: 1px solid currentColor; }
+.st.visible { color: var(--aqua); }
+.st.conf { color: var(--amber); }
+.st.sealed { color: var(--coral); }
+.st.none { color: var(--faint); border-style: dashed; }
+.note { font-size: 14.5px; color: var(--muted); border-left: 2px solid var(--aqua); padding-left: 14px; }
+
+/* ---------- law ---------- */
+.inst-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.inst-body { display: grid; gap: 14px; }
+.inst-body .ref { font-family: var(--f-mono); font-size: 12px; color: var(--faint); }
+.inst-body .says { color: var(--muted); font-size: 15.5px; }
+.inst-body .why { font-size: 15.5px; padding: 14px 16px; border-radius: 14px; background: color-mix(in srgb, var(--aqua) 9%, transparent); }
+.inst-body .why b { display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--aqua); font-weight: 500; margin-bottom: 4px; }
+.venn svg { width: 100%; max-width: 380px; display: block; margin: 0 auto; height: auto; }
+.vc { cursor: pointer; transition: fill-opacity .3s, stroke .3s; }
+.vc:focus { outline: none; }
+.vc:focus-visible { stroke: var(--text); stroke-width: 3; }
+.vlab { font-family: var(--f-mono); font-size: 11px; fill: var(--text); pointer-events: none; }
+.vlab.off { fill: var(--faint); }
+.verdict { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.5rem, 3vw, 2.1rem); letter-spacing: -.03em; line-height: 1.05; }
+.verdict.yes { color: var(--aqua); }
+.verdict.no { color: var(--coral); }
+.vtext { color: var(--muted); font-size: 14.5px; }
+.vtext ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 6px; }
+
+/* ---------- time ---------- */
+.clock { display: grid; gap: 6px; }
+.clock .big { font-family: var(--f-display); font-weight: 250; font-size: clamp(2.2rem, 6vw, 4.2rem); letter-spacing: -.04em; line-height: 1; }
+.clock .when { font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.scrub { position: relative; padding-top: 34px; }
+.ticks { position: absolute; left: 11px; right: 11px; top: 0; height: 30px; }
+.tick { position: absolute; bottom: 4px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; border: 2px solid; background: var(--deep); padding: 0; cursor: pointer; transition: transform .2s; }
+.tick:hover, .tick.on { transform: scale(1.35); }
+.tick.past { background: currentColor; }
+.years { position: relative; height: 18px; margin: 6px 11px 0; }
+.years span { position: absolute; font-family: var(--f-mono); font-size: 11px; color: var(--faint); transform: translateX(-50%); }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; margin: 0; }
+input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--aqua) var(--fill, 50%), var(--line) var(--fill, 50%)); }
+input[type="range"]::-moz-range-track { height: 4px; border-radius: 4px; background: var(--line); }
+input[type="range"]::-moz-range-progress { height: 4px; border-radius: 4px; background: var(--aqua); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--text); border: 4px solid var(--deep); box-shadow: 0 0 0 1.5px var(--aqua); margin-top: -9px; cursor: grab; }
+input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--text); border: 4px solid var(--deep); box-shadow: 0 0 0 1.5px var(--aqua); cursor: grab; }
+.jump { display: flex; flex-wrap: wrap; gap: 8px; }
+.cols3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .cols3 { grid-template-columns: minmax(0, 1fr); } }
+.col { display: grid; gap: 10px; align-content: start; }
+.col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.col li { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 10px; font-size: 14.5px; }
+.col li i { width: 10px; height: 10px; border-radius: 50%; margin-top: 7px; }
+.col li small { display: block; font-family: var(--f-mono); font-size: 11px; color: var(--faint); }
+.empty { font-size: 14px; color: var(--faint); }
+.dmaline { font-size: 15px; color: var(--muted); max-width: 75ch; }
+
+/* ---------- cases ---------- */
+.case-tabs { display: grid; gap: 6px; align-content: start; }
+.case-tabs button { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; text-align: left; border: 1px solid var(--line); background: var(--deep-2); border-radius: 16px; padding: 12px 14px; transition: border-color .2s; }
+.case-tabs button[aria-pressed="true"] { border-color: var(--aqua); background: var(--panel); }
+.case-tabs .cn { font-family: var(--f-display); font-weight: 400; font-size: 14.5px; letter-spacing: -.01em; }
+.sig { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.sig::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.sig.live { color: var(--coral); }
+.sig.live::before { animation: blink 1.4s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: .2; } }
+@media (prefers-reduced-motion: reduce) { .sig.live::before { animation: none; } }
+.sig.decided { color: var(--aqua); }
+.sig.closed { color: var(--faint); }
+.sig.evidence { color: var(--amber); }
+.case-body { display: grid; gap: 14px; align-content: start; }
+.case-body .meta { font-family: var(--f-mono); font-size: 12px; color: var(--faint); }
+.case-body p { color: var(--muted); font-size: 15.5px; }
+.case-body .after { font-size: 15px; color: var(--text); padding-top: 12px; border-top: 1px solid var(--line); }
+.grids { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.grid100 { display: grid; gap: 8px; }
+.dotgrid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; max-width: 200px; }
+.dotgrid i { aspect-ratio: 1; border-radius: 50%; background: var(--line); }
+.dotgrid i.on { background: var(--coral); }
+.grid100 b { font-family: var(--f-display); font-weight: 400; font-size: 1.6rem; letter-spacing: -.03em; color: var(--coral); }
+.grid100 span { font-size: 13px; color: var(--muted); }
+
+/* ---------- business ---------- */
+.moves { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 700px) { .moves { grid-template-columns: minmax(0, 1fr); } }
+.move { display: grid; gap: 8px; padding: 20px; border: 1px solid var(--line); border-radius: 20px; background: color-mix(in srgb, var(--deep-2) 85%, transparent); align-content: start; }
+.move p { color: var(--muted); font-size: 14.5px; }
+.move .k { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--aqua); }
+.sorter { display: grid; gap: 12px; }
+.srow { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; align-items: center; }
+.srow > span { font-family: var(--f-display); font-weight: 400; }
+.flip { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--deep-2); justify-self: start; }
+.flip button { border: 0; background: transparent; border-radius: 999px; padding: 7px 14px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); min-height: 34px; }
+.flip button[aria-pressed="true"].p { background: var(--aqua); color: var(--deep); }
+.flip button[aria-pressed="true"].s { background: var(--coral); color: var(--deep); }
+.sort-out { font-size: 14.5px; color: var(--muted); min-height: 3em; }
+.sort-out b { color: var(--text); }
+
+/* ---------- SDG ---------- */
+.scale svg { width: 100%; height: auto; display: block; }
+.beam { stroke: var(--text); stroke-width: 3; stroke-linecap: round; }
+.str { stroke: var(--muted); stroke-width: 1.5; }
+.pan { stroke-width: 2; }
+.scl { font-family: var(--f-display); font-size: 22px; font-weight: 400; letter-spacing: -.02em; }
+.scs { font-family: var(--f-mono); font-size: 11px; fill: var(--muted); }
+.slider-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.zone { display: grid; gap: 8px; }
+.zone .zt { font-family: var(--f-display); font-weight: 400; font-size: 1.4rem; letter-spacing: -.02em; }
+.zone p { color: var(--muted); font-size: 15px; }
+.tgt { display: grid; gap: 10px; }
+.tgt div { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 12px; font-size: 14.5px; color: var(--muted); align-items: baseline; }
+.tgt b { font-family: var(--f-display); font-weight: 500; color: var(--text); }
+
+/* ---------- checks ---------- */
+.checks { display: grid; gap: 4px; }
+.check { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; padding: 13px 4px; border-bottom: 1px solid var(--line); cursor: pointer; align-items: start; }
+.check:last-child { border-bottom: 0; }
+.check input { appearance: none; -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--muted); margin: 0; display: grid; place-items: center; cursor: pointer; background: transparent; transition: background .2s, border-color .2s; }
+.check input:checked { background: var(--aqua); border-color: var(--aqua); }
+.check input:checked::after { content: ""; width: 9px; height: 5px; border-left: 2.5px solid var(--deep); border-bottom: 2.5px solid var(--deep); transform: rotate(-45deg) translate(1px, -1px); }
+.check span { font-size: 15px; }
+.check input:checked + span { color: var(--faint); text-decoration: line-through; }
+.progress { display: flex; align-items: center; gap: 14px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.progress svg { width: 54px; height: 54px; }
+
+/* ---------- sources drawer ---------- */
+.drawer { position: fixed; z-index: 8; top: 0; right: 0; bottom: 0; width: min(460px, 100%); background: var(--deep-2); border-left: 1px solid var(--line); transform: translateX(102%); transition: transform .35s cubic-bezier(.2,.7,.2,1); display: grid; grid-template-rows: auto minmax(0, 1fr); padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.drawer.open { transform: none; }
+@media (prefers-reduced-motion: reduce) { .drawer { transition: none; } }
+.drawer-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+.drawer ol { list-style: none; margin: 0; padding: 8px 20px 24px; overflow-y: auto; }
+.drawer li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 6px; padding: 10px 8px; border-radius: 12px; font-size: 14px; line-height: 1.45; transition: background .4s; }
+.drawer li.flash { background: color-mix(in srgb, var(--aqua) 18%, transparent); }
+.drawer li .n { font-family: var(--f-mono); font-size: 12px; color: var(--faint); }
+.drawer li a { font-family: var(--f-mono); font-size: 11.5px; word-break: break-all; }
+.scrim { position: fixed; inset: 0; z-index: 7; background: color-mix(in srgb, var(--deep) 60%, transparent); }
+</style>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="glow" aria-hidden="true"></div>
+
+<header class="bar-top">
+  <div class="brand"><b>the secrecy ripple</b><span>MGT402M26 · AI &amp; IP: Is it a Ripple Effect?</span></div>
+  <div class="top-actions">
+    <button class="ghost" id="openSources" type="button">Sources · 21</button>
+  </div>
+</header>
+
+<main class="stage" id="stage">
+
+  <!-- 0 COVER -->
+  <section class="ch cover" id="cover" data-name="The question">
+    <span class="tag">Working notes · Trade Secrets vs AI Transparency</span>
+    <h1>can an ai system be both a protected <span class="coral">secret</span> and an <span class="aqua">accountable</span> one?</h1>
+    <p class="lead">One secrecy decision spreads outward: to the person scored by the model, the company's legal risk, the regulator, and finally to the goals of accountable institutions and equal treatment. These notes follow that ripple.</p>
+    <div class="cover-meta">
+      <div><span class="tag">Compiled</span><b>22 Oct 2026</b></div>
+      <div><span class="tag">Litigation status</span><b>Checked online that date</b></div>
+      <div><span class="tag">Before presenting</span><b>Confirm dockets</b></div>
+    </div>
+    <button class="cta" type="button" data-go="1">Drop the first stone <span aria-hidden="true">→</span></button>
+    <p class="hint">Move between chapters with <kbd>←</kbd> <kbd>→</kbd>, a swipe, or the dots below. Tap the water anywhere.</p>
+  </section>
+
+  <!-- 1 RIPPLE -->
+  <section class="ch" id="ripple" data-name="The ripple" hidden>
+    <div class="ch-head">
+      <span class="ch-no">01 · CORE ARGUMENT</span>
+      <h2>secrecy is the default shield. it also blocks the view.</h2>
+      <p class="lead">Model weights, training data and scoring logic are rarely patentable or worth publishing in a patent, so firms keep them as trade secrets. That same secrecy blocks the scrutiny that fairness, safety and public trust need. The law is moving to <strong>controlled disclosure</strong>: secrets stay protected from competitors, while regulators, courts and affected people see enough to hold the system to account.</p>
+    </div>
+    <div class="two wide-left">
+      <div class="arcs">
+        <svg viewBox="0 0 560 300" id="arcSvg" role="group" aria-label="Ripple arcs spreading from the secrecy decision"></svg>
+      </div>
+      <div class="panel reach">
+        <span class="tag">One decision, five reaches · tap an arc</span>
+        <div class="reach-list" id="reachList"></div>
+        <div class="reach-detail" id="reachDetail" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 ACCESS -->
+  <section class="ch" id="access" data-name="Who sees what" hidden>
+    <div class="ch-head">
+      <span class="ch-no">02 · CONTROLLED DISCLOSURE</span>
+      <h2>the closer to the centre, the more you may see.</h2>
+      <p class="lead">Each ring is an audience. Its colour shows the deepest access that audience gets to the secret, as these notes describe it. Switch the jurisdiction and tap a ring.</p>
+    </div>
+    <div class="two">
+      <div class="rings" style="display:grid;gap:18px">
+        <div class="seg" role="group" aria-label="Jurisdiction" id="jurSeg" style="justify-self:center"></div>
+        <svg viewBox="0 0 440 440" id="ringSvg" role="group" aria-label="Access rings by audience"></svg>
+        <div class="key" style="justify-content:center">
+          <span><i style="background:var(--amber)"></i>Sees protected material in confidence</span>
+          <span><i style="background:var(--aqua)"></i>Gets an explanation</span>
+          <span><i style="background:color-mix(in srgb,var(--aqua) 40%,var(--deep))"></i>Public summary only</span>
+          <span><i style="background:color-mix(in srgb,var(--coral) 55%,var(--deep))"></i>Sees nothing</span>
+        </div>
+      </div>
+      <div class="panel" style="display:grid;gap:12px" aria-live="polite" id="accessPanel"></div>
+    </div>
+  </section>
+
+  <!-- 3 LAW -->
+  <section class="ch" id="law" data-name="The law" hidden>
+    <div class="ch-head">
+      <span class="ch-no">02 · LEGAL LANDSCAPE</span>
+      <h2>six instruments, one three-part test.</h2>
+    </div>
+    <div class="two" style="align-items:start">
+      <div style="display:grid;gap:18px">
+        <div class="inst-tabs" id="instTabs" role="group" aria-label="Instruments"></div>
+        <div class="panel inst-body" id="instBody" aria-live="polite"></div>
+      </div>
+      <div class="panel venn" style="display:grid;gap:14px">
+        <span class="tag">Is it still a trade secret? Tap a circle</span>
+        <svg viewBox="0 0 360 330" id="vennSvg" role="group" aria-label="Three conditions for trade-secret protection"></svg>
+        <div class="chips" id="presets" role="group" aria-label="Example scenarios"></div>
+        <div id="verdict" aria-live="polite" style="display:grid;gap:8px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 TIME -->
+  <section class="ch" id="time" data-name="Through time" hidden>
+    <div class="ch-head">
+      <span class="ch-no">03 · EU TIMELINE AND THE 2025 DMA POINT</span>
+      <h2>drag through time. watch the duties switch on.</h2>
+      <p class="lead">The slider runs from January 2025 to December 2028, to scale. It starts on the day these notes were compiled. Dates after that are scheduled, not observed.</p>
+    </div>
+    <div class="panel" style="display:grid;gap:22px">
+      <div class="clock">
+        <span class="when" id="whenLabel">Notes compiled</span>
+        <div class="big tnum" id="bigDate">22 Oct 2026</div>
+      </div>
+      <div>
+        <div class="scrub">
+          <div class="ticks" id="ticks"></div>
+          <input type="range" id="timeRange" min="0" max="1460" step="1" aria-label="Date">
+        </div>
+        <div class="years" id="years"></div>
+      </div>
+      <div class="jump">
+        <button class="chip" type="button" data-jump="2025-08-02">GPAI obligations</button>
+        <button class="chip" type="button" data-jump="2026-07-16">Google DMA decisions</button>
+        <button class="chip" type="button" data-jump="2026-10-22">Notes compiled</button>
+        <button class="chip" type="button" data-jump="today">Today</button>
+        <button class="chip" type="button" data-jump="2028-08-02">Annex I applies</button>
+      </div>
+    </div>
+    <div class="cols3">
+      <div class="panel col"><span class="tag">Latest events</span><ul id="colLatest"></ul></div>
+      <div class="panel col"><span class="tag">In force on this date</span><ul id="colForce"></ul></div>
+      <div class="panel col"><span class="tag">Coming next</span><ul id="colNext"></ul></div>
+    </div>
+    <p class="dmaline"><b style="color:var(--text)">The DMA point.</b> The Digital Markets Act does not regulate stand-alone AI or set trade-secret rules; it bites when AI is built into a designated gatekeeper's services. Its 2026 Google decisions show the same controlled-disclosure logic: mandated access, with anonymisation, audits, certification and use limits standing in for secrecy. No explicit trade-secret language was found in the DMA material read (secondary sources only).</p>
+  </section>
+
+  <!-- 5 CASES -->
+  <section class="ch" id="cases" data-name="The cases" hidden>
+    <div class="ch-head">
+      <span class="ch-no">04 · CASES AND LIVE LITIGATION</span>
+      <h2>six disputes, from black box to talent wars.</h2>
+    </div>
+    <div class="two" style="grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-items:start">
+      <div class="case-tabs" id="caseTabs" role="group" aria-label="Cases"></div>
+      <div class="panel case-body" id="caseBody" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- 6 BUSINESS -->
+  <section class="ch" id="business" data-name="For managers" hidden>
+    <div class="ch-head">
+      <span class="ch-no">05 · BUSINESS AND MANAGERIAL IMPLICATIONS</span>
+      <h2>secret by default is no longer safe by default.</h2>
+    </div>
+    <div class="two" style="align-items:start">
+      <div class="moves">
+        <div class="move"><span class="k">Plan disclosure</span><h3>Two audiences, two files</h3><p>Plan for disclosure to regulators (documentation, training-data summaries, explanations) and keep it separate from what competitors can see.</p></div>
+        <div class="move"><span class="k">Prove care</span><h3>Show reasonable steps</h3><p>Access logs, NDAs, clean-room onboarding. X.AI v. OpenAI and Apple v. Liu turn on whether the plaintiff can identify specific secrets and prove misuse.</p></div>
+        <div class="move"><span class="k">Choose protection</span><h3>Patent or secret</h3><p>Patents publish the invention. Secrecy avoids that but invites transparency mandates and leaves no protection after a leak.</p></div>
+        <div class="move"><span class="k">Compete on trust</span><h3>Explainability sells</h3><p>EU fines (GPAI up to 3% of turnover or EUR 15m) and lost public trust make explainability a competitive feature. Indian firms selling into the EU must comply regardless.</p></div>
+      </div>
+      <div class="panel sorter">
+        <span class="tag">Your call · patent or keep secret?</span>
+        <div class="srow"><span>Method</span><div class="flip" data-k="method"><button type="button" class="p" aria-pressed="false">Patent</button><button type="button" class="s" aria-pressed="true">Secret</button></div></div>
+        <div class="srow"><span>Weights</span><div class="flip" data-k="weights"><button type="button" class="p" aria-pressed="false">Patent</button><button type="button" class="s" aria-pressed="true">Secret</button></div></div>
+        <div class="srow"><span>Data</span><div class="flip" data-k="data"><button type="button" class="p" aria-pressed="false">Patent</button><button type="button" class="s" aria-pressed="true">Secret</button></div></div>
+        <div class="sort-out" id="sortOut" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 SDG -->
+  <section class="ch" id="sdg" data-name="The SDG balance" hidden>
+    <div class="ch-head">
+      <span class="ch-no">06 · SDG IMPACT</span>
+      <h2>balance, not abolition.</h2>
+      <p class="lead">Slide from total secrecy to full publication and watch which UN targets each extreme serves.</p>
+    </div>
+    <div class="two">
+      <div class="scale" style="display:grid;gap:16px">
+        <svg viewBox="0 0 600 300" id="scaleSvg" role="img" aria-label="A balance between SDG 9 innovation and SDG 16 and 10 accountability"></svg>
+        <div class="slider-row">
+          <span>Secrecy</span>
+          <input type="range" id="balRange" min="0" max="100" value="50" aria-label="Secrecy to disclosure">
+          <span>Disclosure</span>
+        </div>
+      </div>
+      <div class="panel" style="display:grid;gap:18px">
+        <div class="zone" id="zone" aria-live="polite"></div>
+        <div class="tgt">
+          <div><b>16.6</b><span>“Develop effective, accountable and transparent institutions at all levels”</span></div>
+          <div><b>16.10</b><span>“Ensure public access to information and protect fundamental freedoms”</span></div>
+          <div><b>16.3</b><span>Equal access to justice (Loomis)</span></div>
+          <div><b>10.3</b><span>“Ensure equal opportunity and reduce inequalities of outcome” (biased scoring)</span></div>
+          <div><b>9.5</b><span>“Enhance scientific research… encourage innovation” (secrecy protects R&amp;D incentives)</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 CHECKS -->
+  <section class="ch" id="checks" data-name="Before you present" hidden>
+    <div class="ch-head">
+      <span class="ch-no">07 · CAVEATS BEFORE PRESENTING</span>
+      <h2>verify before you stand up.</h2>
+      <p class="lead">Most litigation facts come from news and law-firm summaries. Tick each check as you clear it; ticks stay in this browser only.</p>
+    </div>
+    <div class="two" style="align-items:start">
+      <div class="panel checks" id="checkList"></div>
+      <div style="display:grid;gap:18px;align-content:start">
+        <div class="progress">
+          <svg viewBox="0 0 54 54" aria-hidden="true"><circle cx="27" cy="27" r="22" fill="none" stroke="var(--line)" stroke-width="5"></circle><circle id="progArc" cx="27" cy="27" r="22" fill="none" stroke="var(--aqua)" stroke-width="5" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90 27 27)"></circle></svg>
+          <span id="progTxt" class="tnum">0 of 7 cleared</span>
+          <button class="ghost" id="clearChecks" type="button">Clear ticks</button>
+        </div>
+        <p class="lead" style="font-size:1rem">The full source list sits behind the <b style="color:var(--text)">Sources</b> button at the top. Every small number in these chapters opens it at that entry.</p>
+        <button class="cta" type="button" id="openSources2">Open the 21 sources <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="bar-bot" aria-label="Chapters">
+  <button class="navbtn" id="prev" type="button" aria-label="Previous chapter"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div>
+    <div class="dots" id="dots"></div>
+    <div class="chap-name" id="chapName"></div>
+  </div>
+  <button class="navbtn" id="next" type="button" aria-label="Next chapter"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</nav>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-label="Sources" aria-hidden="true">
+  <div class="drawer-head"><span class="tag">Sources</span><button class="ghost" id="closeSources" type="button">Close</button></div>
+  <ol id="srcList"></ol>
+</aside>
+
+<script>
+(function () {
+  const $ = (s, r = document) => r.querySelector(s);
+  const NS = "http://www.w3.org/2000/svg";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const el = (t, a = {}, h) => { const e = document.createElement(t); for (const k in a) e.setAttribute(k, a[k]); if (h != null) e.innerHTML = h; return e; };
+  const sv = (t, a = {}) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const cite = (...ns) => ns.map(n => `<button type="button" class="cite" data-src="${n}" aria-label="Source ${n}">[${n}]</button>`).join("");
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  /* ================= ripple field ================= */
+  const cv = $("#field"), ctx = cv.getContext("2d");
+  let W = 0, H = 0, DPR = 1;
+  const waves = [];
+  function size() { DPR = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0); if (reduce) drawStatic(); }
+  function spawn(x, y, strength = 1, hue = "aqua") { if (reduce) return; for (let k = 0; k < 3; k++) waves.push({ x, y, t0: performance.now() + k * 180, s: strength * (1 - k * .25), c: hue }); }
+  function drawStatic() {
+    ctx.clearRect(0, 0, W, H);
+    const aq = css("--aqua");
+    for (let r = 80; r < Math.max(W, H); r += 90) { ctx.beginPath(); ctx.arc(W * .82, H * .78, r, 0, Math.PI * 2); ctx.strokeStyle = aq; ctx.globalAlpha = .05; ctx.lineWidth = 1; ctx.stroke(); }
+    ctx.globalAlpha = 1;
+  }
+  let colors = {};
+  function loop(now) {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = waves.length - 1; i >= 0; i--) {
+      const w = waves[i], age = (now - w.t0) / 1000;
+      if (age < 0) continue;
+      const r = age * 170, life = 1 - age / 4.2;
+      if (life <= 0) { waves.splice(i, 1); continue; }
+      ctx.beginPath(); ctx.arc(w.x, w.y, r, 0, Math.PI * 2);
+      ctx.strokeStyle = colors[w.c]; ctx.globalAlpha = .38 * life * w.s; ctx.lineWidth = 1.5 + 2 * life; ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(loop);
+  }
+  colors = { aqua: css("--aqua"), coral: css("--coral"), amber: css("--amber") };
+  size(); addEventListener("resize", size);
+  if (!reduce) {
+    requestAnimationFrame(loop);
+    setInterval(() => { if (document.hidden) return; spawn(W * (.15 + Math.random() * .7), H * (.25 + Math.random() * .6), .35); }, 3600);
+    addEventListener("pointerdown", e => { if (e.target.closest("button, input, a, .drawer")) return; spawn(e.clientX, e.clientY, 1); });
+  }
+
+  /* ================= chapters ================= */
+  const chapters = [...document.querySelectorAll(".ch")];
+  const ids = chapters.map(c => c.id);
+  let cur = 0;
+  const dots = $("#dots");
+  chapters.forEach((c, i) => {
+    const b = el("button", { type: "button", "aria-label": `Chapter ${i}: ${c.dataset.name}` }, "<i></i>");
+    b.addEventListener("click", () => go(i));
+    dots.appendChild(b);
+  });
+  function go(i, fromHash) {
+    i = Math.max(0, Math.min(chapters.length - 1, i));
+    if (i === cur && !fromHash && !chapters[i].hidden) return;
+    const dir = i >= cur ? 1 : -1;
+    chapters.forEach((c, k) => { c.hidden = k !== i; c.classList.remove("enter"); });
+    void chapters[i].offsetWidth; chapters[i].classList.add("enter");
+    cur = i;
+    [...dots.children].forEach((b, k) => { if (k === i) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current"); });
+    $("#chapName").textContent = `${String(i).padStart(2, "0")} / ${String(chapters.length - 1).padStart(2, "0")} · ${chapters[i].dataset.name}`;
+    $("#prev").disabled = i === 0; $("#next").disabled = i === chapters.length - 1;
+    if (!fromHash) { try { history.replaceState(null, "", "#" + ids[i]); } catch (e) { location.hash = ids[i]; } }
+    scrollTo({ top: 0, behavior: "auto" });
+    spawn(dir > 0 ? W * .9 : W * .1, H * .55, .9);
+    if (ids[i] === "ripple") setTimeout(() => dropStone(), 250);
+  }
+  $("#prev").addEventListener("click", () => go(cur - 1));
+  $("#next").addEventListener("click", () => go(cur + 1));
+  document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(+b.dataset.go)));
+  addEventListener("keydown", e => {
+    if ($("#drawer").classList.contains("open")) { if (e.key === "Escape") closeDrawer(); return; }
+    const t = e.target; if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); go(cur + 1); }
+    if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(cur - 1); }
+  });
+  let tx = null, ty = null;
+  addEventListener("touchstart", e => { if (e.target.closest("input, .drawer, .noswipe")) { tx = null; return; } tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+  addEventListener("touchend", e => { if (tx == null) return; const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty; if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) go(cur + (dx < 0 ? 1 : -1)); tx = null; }, { passive: true });
+  addEventListener("hashchange", () => { const k = ids.indexOf(location.hash.slice(1)); if (k >= 0 && k !== cur) go(k, true); });
+
+  /* ================= 01 ripple arcs ================= */
+  const REACH = [
+    { n: "The secrecy decision", s: "secrecy decision", b: "Weights, training data and scoring logic are rarely patentable or worth publishing in a patent, so the firm keeps them secret. Everything else follows from this one choice." },
+    { n: "The person scored", s: "person scored", b: "Loomis could not test the COMPAS score used at sentencing. ProPublica found non-reoffending Black defendants were wrongly flagged high-risk 44.9% of the time, against 23.5% for white defendants." + cite(8, 9) },
+    { n: "The company's legal risk", s: "company risk", b: "GPAI fines up to 3% of turnover or EUR 15m, transparency mandates like California AB 2013, and no protection once a secret leaks. In trade-secret suits the firm must name specific secrets and prove misuse." + cite(3, 10, 12) },
+    { n: "The regulator", s: "regulator", b: "Receives technical documentation and protected material in confidence (AI Act Arts. 53, 78) and balances access against secrecy case by case (CJEU C-203/22)." + cite(1, 2) },
+    { n: "SDG 16 and SDG 10", s: "sdg 16 · sdg 10", b: "Accountable, transparent institutions (16.6), public access to information (16.10), equal access to justice (16.3) and equal opportunity (10.3)." + cite(21) }
+  ];
+  const arcSvg = $("#arcSvg");
+  const AC = { x: 280, y: 290 };
+  const RAD = [62, 108, 152, 196, 240];
+  const arcEls = [];
+  const arcPath = r => `M ${AC.x - r} ${AC.y} A ${r} ${r} 0 0 1 ${AC.x + r} ${AC.y}`;
+  for (let i = 4; i >= 1; i--) {
+    const p = sv("path", { d: arcPath(RAD[i]), class: "arc", stroke: "var(--aqua)", "stroke-opacity": .14 + (4 - i) * .04, tabindex: 0, role: "button", "aria-label": REACH[i].n });
+    p.dataset.i = i; p.dataset.base = p.getAttribute("stroke-opacity");
+    p.addEventListener("click", () => pickReach(i, true));
+    p.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickReach(i, true); } });
+    arcSvg.appendChild(p); arcEls[i] = p;
+  }
+  for (let i = 1; i <= 4; i++) { const t = sv("text", { x: AC.x, y: AC.y - RAD[i] + 4, "text-anchor": "middle", class: "arc-label" }); t.textContent = REACH[i].s; arcSvg.appendChild(t); }
+  const stone = sv("path", { d: `M ${AC.x - 40} ${AC.y} A 40 40 0 0 1 ${AC.x + 40} ${AC.y} Z`, fill: "var(--coral)", tabindex: 0, role: "button", "aria-label": REACH[0].n, style: "cursor:pointer" });
+  stone.addEventListener("click", () => { pickReach(0, true); });
+  stone.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickReach(0, true); } });
+  arcSvg.appendChild(stone);
+  const st1 = sv("text", { x: AC.x, y: AC.y - 16, "text-anchor": "middle", class: "stone-label" }); st1.textContent = "SECRECY"; arcSvg.appendChild(st1);
+  const wave = sv("path", { d: arcPath(40), fill: "none", stroke: "var(--coral)", "stroke-width": 3, opacity: 0 }); arcSvg.appendChild(wave);
+  const rl = $("#reachList");
+  REACH.forEach((r, i) => { const b = el("button", { type: "button", "aria-pressed": "false" }, `<span>0${i}</span><span>${r.n}</span>`); b.addEventListener("click", () => pickReach(i, true)); rl.appendChild(b); });
+  let raf;
+  function dropStone(to = 240) {
+    if (reduce) return;
+    cancelAnimationFrame(raf);
+    const t0 = performance.now(), dur = 1300;
+    const f = now => {
+      const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3), r = 40 + (to - 40) * e;
+      wave.setAttribute("d", arcPath(r)); wave.setAttribute("opacity", String(.95 * (1 - p)));
+      arcEls.forEach((a, i) => { if (!a) return; const lit = Math.abs(r - RAD[i]) < 26; a.setAttribute("stroke-opacity", lit ? .55 : (+a.dataset.i === sel ? .5 : a.dataset.base)); });
+      if (p < 1) raf = requestAnimationFrame(f); else pickReach(sel, false);
+    };
+    raf = requestAnimationFrame(f);
+  }
+  let sel = 0;
+  function pickReach(i, animate) {
+    sel = i;
+    [...rl.children].forEach((b, k) => b.setAttribute("aria-pressed", String(k === i)));
+    arcEls.forEach((a, k) => { if (a) a.setAttribute("stroke-opacity", k === i ? .5 : a.dataset.base); });
+    $("#reachDetail").innerHTML = `<h3 style="margin-bottom:6px">${REACH[i].n}</h3><p>${REACH[i].b}</p>`;
+    if (animate) dropStone(i === 0 ? 240 : RAD[i]);
+  }
+  pickReach(0, false);
+
+  /* ================= 02 access rings ================= */
+  const ITEMS = [
+    { id: "weights", label: "Model weights" }, { id: "data", label: "Training data" }, { id: "logic", label: "Scoring logic & source code" },
+    { id: "docs", label: "Technical documentation" }, { id: "summary", label: "Training-content summary" }, { id: "explain", label: "Explanation of a decision" }
+  ];
+  const VIEWERS = [
+    { id: "court", label: "Court" }, { id: "regulator", label: "Regulator" }, { id: "affected", label: "Person scored" }, { id: "public", label: "Public" }, { id: "competitor", label: "Competitor" }
+  ];
+  const S = (s, txt, basis) => ({ s, txt, basis });
+  const EU = "Dir. 2016/943 Art. 2(1) · TRIPS Art. 39.2";
+  const euSum = S("visible", "A “sufficiently detailed summary” of training content, published", "AI Act Art. 53 · open-source partly exempt, Art. 53(2)");
+  const usSum = S("visible", "Training-data summary published under California AB 2013", "In force 1 Jan 2026 · challenged in xAI v. Bonta");
+  const NONE = S("none", "", "No route in these notes");
+  const M = {
+    eu: {
+      competitor: { weights: S("sealed", "", EU), data: S("sealed", "", EU), logic: S("sealed", "", EU), docs: S("sealed", "", "Kept for the AI Office · Art. 78"), summary: euSum, explain: S("sealed", "", "Owed only to the person affected") },
+      public: { weights: S("sealed", "", EU), data: S("sealed", "", EU), logic: S("sealed", "", EU), docs: S("sealed", "", "Kept for the AI Office · Art. 78"), summary: euSum, explain: S("sealed", "", "Owed only to the person affected") },
+      affected: { weights: S("sealed", "", EU), data: S("sealed", "", EU), logic: S("sealed", "", "Goes to the regulator or court instead · C-203/22"), docs: S("sealed", "", "Kept for the AI Office · Art. 78"), summary: euSum, explain: S("visible", "“Clear and meaningful explanations” of the AI's role and “meaningful information about the logic involved”. A formula alone is not enough.", "AI Act Art. 86 · GDPR Art. 15(1)(h) · CJEU C-203/22") },
+      regulator: { weights: NONE, data: NONE, logic: S("conf", "Source code and trade secrets, kept confidential; balanced case by case", "AI Act Art. 78 · C-203/22"), docs: S("conf", "Technical documentation kept for the AI Office", "AI Act Arts. 53, 78"), summary: euSum, explain: NONE },
+      court: { weights: NONE, data: NONE, logic: S("conf", "Protected material, so the court can balance access against the secret", "CJEU C-203/22, 27 Feb 2025"), docs: NONE, summary: euSum, explain: NONE }
+    },
+    us: {
+      competitor: { weights: S("sealed", "", "DTSA, 18 U.S.C. §1839(3)"), data: S("sealed", "", "DTSA, 18 U.S.C. §1839(3)"), logic: S("sealed", "", "DTSA, 18 U.S.C. §1839(3)"), docs: NONE, summary: usSum, explain: S("sealed", "", "No duty named in these notes") },
+      public: { weights: S("sealed", "", "DTSA, 18 U.S.C. §1839(3)"), data: S("sealed", "", "DTSA, 18 U.S.C. §1839(3)"), logic: S("sealed", "", "DTSA, 18 U.S.C. §1839(3)"), docs: NONE, summary: usSum, explain: S("sealed", "", "No duty named in these notes") },
+      affected: { weights: S("sealed", "", "DTSA"), data: S("sealed", "", "DTSA"), logic: S("sealed", "", "COMPAS method a trade secret · State v. Loomis"), docs: NONE, summary: usSum, explain: S("sealed", "", "Loomis could not test the score") },
+      regulator: { weights: NONE, data: NONE, logic: NONE, docs: NONE, summary: usSum, explain: NONE },
+      court: { weights: NONE, data: NONE, logic: S("sealed", "", "Method stayed secret; score allowed with five written warnings · Loomis"), docs: NONE, summary: usSum, explain: NONE }
+    },
+    in: {}
+  };
+  VIEWERS.forEach(v => {
+    const b = v.id === "competitor" ? "Breach of confidence · Contract Act s.27 · IT Act ss.43A/72/72A · BNS" : "No AI disclosure duty";
+    M.in[v.id] = { weights: S("sealed", "", b), data: S("sealed", "", b), logic: S("sealed", "", b), docs: S("none", "", "No statutory duty"), summary: S("none", "", "No statutory duty"), explain: S("none", "", "No statutory duty · MeitY guidelines non-binding") };
+  });
+  const NOTES = {
+    eu: {
+      competitor: "Secrecy holds against rivals. Art. 5 of the Directive only shields disclosures for free expression or to reveal misconduct in the public interest. Gatekeepers are the exception: Google must share anonymised search data on FRAND terms, not for training general-purpose AI." + cite(6, 15),
+      public: "The public gets a summary of training content, not the secret. Disclosure goes to regulators confidentially, and to the public only as a summary." + cite(2, 4),
+      affected: "“It's a trade secret” is not a complete defence against explaining an automated decision. A blanket Austrian trade-secret exclusion was held incompatible. Art. 86 likely moves with Annex III to 2 Dec 2027 (verify)." + cite(1, 3),
+      regulator: "Authorities must keep source code and trade secrets confidential. AI Office fining powers apply from 2 Aug 2026." + cite(2, 3),
+      court: "The protected material goes to the regulator or court, which balances the right of access against the trade secret case by case." + cite(1)
+    },
+    us: {
+      competitor: "A federal civil claim under the DTSA. X.AI v. OpenAI was dismissed (“mere possession” is not misappropriation); Apple v. Liu is live." + cite(7, 12, 13),
+      public: "California's training-data summary law has applied since 1 Jan 2026. xAI's bid for a preliminary injunction was denied on 4 Mar 2026; an appeal is pending." + cite(10, 11),
+      affected: "In State v. Loomis the COMPAS method was a trade secret, so the defendant could not test the score used at sentencing." + cite(8),
+      regulator: "These notes name no US regulator route for AI disclosure. The California summary is the main duty covered." + cite(10),
+      court: "The Wisconsin Supreme Court allowed the score with five written warnings, but barred its use to decide incarceration or sentence severity." + cite(8)
+    },
+    in: {
+      competitor: "No dedicated statute: breach of confidence, contract, the IT Act and criminal breach of trust. The remedy is weaker once a secret leaks, e.g. into a public AI tool." + cite(19),
+      _: "No statutory trade-secret test and no AI disclosure duty. MeitY's AI Governance Guidelines (5 Nov 2025) list transparency and accountability among seven principles but are non-binding. Indian firms selling into the EU must comply anyway." + cite(19, 20)
+    }
+  };
+  const ST_LABEL = { visible: "Disclosed", conf: "In confidence", sealed: "Sealed", none: "No route" };
+  let jur = "eu", viewer = "affected";
+  const jurSeg = $("#jurSeg");
+  [["eu", "EU"], ["us", "US"], ["in", "India"]].forEach(([id, lab]) => {
+    const b = el("button", { type: "button", "aria-pressed": String(id === jur) }, lab);
+    b.addEventListener("click", () => { jur = id; [...jurSeg.children].forEach(c => c.setAttribute("aria-pressed", String(c === b))); drawRings(); spawn(W / 2, H / 2, .8, "amber"); });
+    jurSeg.appendChild(b);
+  });
+  const ringSvg = $("#ringSvg");
+  const RC = 220, RR = [[48, 78], [78, 112], [112, 146], [146, 180], [180, 214]];
+  function level(m) {
+    const v = Object.values(m);
+    if (v.some(x => x.s === "conf")) return "conf";
+    if (m.explain.s === "visible") return "explain";
+    if (m.summary.s === "visible") return "summary";
+    return "nothing";
+  }
+  const LV = { conf: ["var(--amber)", .75], explain: ["var(--aqua)", .7], summary: ["var(--aqua)", .26], nothing: ["var(--coral)", .22] };
+  const LV_TXT = { conf: "Sees protected material in confidence", explain: "Gets an explanation", summary: "Public summary only", nothing: "Sees nothing" };
+  function drawRings() {
+    ringSvg.innerHTML = "";
+    VIEWERS.forEach((v, i) => {
+      const [a, b] = RR[i], mid = (a + b) / 2, lv = level(M[jur][v.id]);
+      const c = sv("circle", { cx: RC, cy: RC, r: mid, class: "ring", stroke: LV[lv][0], "stroke-opacity": LV[lv][1], "stroke-width": b - a - 3, tabindex: 0, role: "button", "aria-label": `${v.label}: ${LV_TXT[lv]}` });
+      c.addEventListener("click", () => { viewer = v.id; drawRings(); });
+      c.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); viewer = v.id; drawRings(); } });
+      ringSvg.appendChild(c);
+      const t = sv("text", { x: RC, y: RC - mid + 4, "text-anchor": "middle", class: "ring-label" }); t.textContent = v.label; ringSvg.appendChild(t);
+      if (v.id === viewer) ringSvg.appendChild(sv("circle", { cx: RC, cy: RC, r: b - 1, class: "ring-sel" }));
+    });
+    ringSvg.appendChild(sv("circle", { cx: RC, cy: RC, r: 44, fill: "var(--coral)" }));
+    const t1 = sv("text", { x: RC, y: RC - 3, "text-anchor": "middle", class: "stone-label" }); t1.textContent = "THE"; ringSvg.appendChild(t1);
+    const t2 = sv("text", { x: RC, y: RC + 11, "text-anchor": "middle", class: "stone-label" }); t2.textContent = "SECRET"; ringSvg.appendChild(t2);
+    const m = M[jur][viewer], vname = VIEWERS.find(v => v.id === viewer).label;
+    $("#accessPanel").innerHTML = `<span class="tag">${{ eu: "EU", us: "US", in: "India" }[jur]} · viewing as</span><h3 style="font-size:1.5rem;font-weight:400">${vname}</h3>
+      <div class="items">${ITEMS.map(it => { const c = m[it.id]; return `<div class="item"><span class="nm">${it.label}</span><span class="st ${c.s}">${ST_LABEL[c.s]}</span>${c.txt ? `<span class="tx">${c.txt}</span>` : ""}<span class="bs">${c.basis}</span></div>`; }).join("")}</div>
+      <p class="note">${NOTES[jur][viewer] || NOTES[jur]._}</p>`;
+  }
+  drawRings();
+
+  /* ================= 03 law ================= */
+  const INST = [
+    { tab: "TRIPS 39.2", name: "TRIPS Art. 39.2", ref: "WTO · global", says: "Protects undisclosed information that is (a) secret, (b) commercially valuable because secret, (c) subject to reasonable steps to keep it secret.", why: "The global baseline. “Reasonable steps” is the test AI firms must meet: access controls, NDAs.", src: [5] },
+    { tab: "EU Directive", name: "EU Directive 2016/943", ref: "Art. 2(1), Art. 5 · EU", says: "Same three-part definition. Art. 5 excludes from remedies disclosures for free expression, or to reveal misconduct or illegal activity in the public interest.", why: "A built-in public-interest carve-out: secrecy is not absolute where wrongdoing is exposed.", src: [6] },
+    { tab: "US DTSA", name: "US Defend Trade Secrets Act", ref: "18 U.S.C. §1839(3) · US", says: "A trade secret is information the owner took reasonable measures to keep secret and which has independent economic value from not being generally known.", why: "The federal civil claim behind the AI talent-poaching suits.", src: [7] },
+    { tab: "India", name: "India", ref: "No dedicated statute", says: "Protection comes from breach of confidence (equity), contract (Contract Act s.27 allows confidentiality covenants), IT Act ss.43A/72/72A, and criminal breach of trust (BNS). MeitY AI Governance Guidelines (5 Nov 2025) list transparency and accountability among seven principles but are non-binding.", why: "A gap: no statutory trade-secret test and no AI disclosure duty. A weaker remedy once a secret leaks, e.g. into a public AI tool.", src: [19, 20] },
+    { tab: "EU AI Act", name: "EU AI Act", ref: "Arts. 53, 78, 86 · EU", says: "Art. 53: GPAI providers keep technical documentation for the AI Office and publish a “sufficiently detailed summary” of training content, while protecting trade secrets. Art. 78: authorities must keep source code and trade secrets confidential. Art. 86: people affected by an Annex III high-risk decision get “clear and meaningful explanations” of the AI's role.", why: "Disclosure goes to regulators confidentially, and to the public only as a summary. Open-source models are partly exempt (Art. 53(2)).", src: [2, 4] },
+    { tab: "GDPR + C-203/22", name: "GDPR Art. 15(1)(h) + CJEU C-203/22", ref: "27 Feb 2025 · EU", says: "A right to “meaningful information about the logic involved” in automated decisions. A formula or algorithm alone is not enough; it must be concise and intelligible. Firms cannot refuse on trade-secret grounds: the protected material goes to the regulator or court, which balances case by case. A blanket national trade-secret exclusion (Austria) was held incompatible.", why: "The strongest current authority that “it's a trade secret” is not a complete defence against explaining an automated decision.", src: [1] }
+  ];
+  const tabs = $("#instTabs");
+  INST.forEach((x, i) => { const b = el("button", { type: "button", class: "chip", "aria-pressed": String(i === 0) }, x.tab); b.addEventListener("click", () => showInst(i)); tabs.appendChild(b); });
+  function showInst(i) {
+    [...tabs.children].forEach((b, k) => b.setAttribute("aria-pressed", String(k === i)));
+    const x = INST[i];
+    $("#instBody").innerHTML = `<div><h3 style="font-size:1.6rem;font-weight:300;letter-spacing:-.03em">${x.name}</h3><div class="ref">${x.ref}</div></div><p class="says">${x.says}${cite(...x.src)}</p><p class="why"><b>Why it matters for AI</b>${x.why}</p>`;
+  }
+  showInst(0);
+
+  const venn = $("#vennSvg");
+  const VC = [
+    { k: "a", cx: 180, cy: 112, lab: "(a) secret", lx: 180, ly: 22 },
+    { k: "b", cx: 124, cy: 208, lab: "(b) valuable because secret", lx: 92, ly: 322 },
+    { k: "c", cx: 236, cy: 208, lab: "(c) reasonable steps", lx: 268, ly: 322 }
+  ];
+  const on = { a: true, b: true, c: true };
+  const vEls = {};
+  VC.forEach(v => {
+    const c = sv("circle", { cx: v.cx, cy: v.cy, r: 88, class: "vc", tabindex: 0, role: "button" });
+    c.addEventListener("click", () => { on[v.k] = !on[v.k]; clearPresets(); drawVenn(); });
+    c.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); on[v.k] = !on[v.k]; clearPresets(); drawVenn(); } });
+    venn.appendChild(c);
+    const t = sv("text", { x: v.lx, y: v.ly, "text-anchor": "middle", class: "vlab" }); t.textContent = v.lab; venn.appendChild(t);
+    vEls[v.k] = { c, t };
+  });
+  const core = sv("circle", { cx: 180, cy: 177, r: 20 }); venn.appendChild(core);
+  const coreMark = sv("path", { "stroke-width": 3, fill: "none", "stroke-linecap": "round", "stroke-linejoin": "round" }); venn.appendChild(coreMark);
+  const PRE = [
+    { label: "Weights behind access controls & NDAs", v: { a: true, b: true, c: true } },
+    { label: "Scoring logic shared with no NDA", v: { a: true, b: true, c: false } },
+    { label: "Code pasted into a public AI tool", v: { a: false, b: true, c: false } }
+  ];
+  const pres = $("#presets");
+  PRE.forEach(p => { const b = el("button", { type: "button", class: "chip", "aria-pressed": "false" }, p.label); b.addEventListener("click", () => { Object.assign(on, p.v); [...pres.children].forEach(c => c.setAttribute("aria-pressed", String(c === b))); drawVenn(); }); pres.appendChild(b); });
+  function clearPresets() { [...pres.children].forEach(c => c.setAttribute("aria-pressed", "false")); }
+  function drawVenn() {
+    VC.forEach(v => {
+      const { c, t } = vEls[v.k], o = on[v.k];
+      c.setAttribute("fill", o ? "var(--aqua)" : "transparent"); c.setAttribute("fill-opacity", o ? .13 : 0);
+      c.setAttribute("stroke", o ? "var(--aqua)" : "var(--faint)"); c.setAttribute("stroke-width", o ? 2 : 1.5);
+      c.setAttribute("stroke-dasharray", o ? "" : "5 6"); c.setAttribute("aria-pressed", String(o));
+      c.setAttribute("aria-label", `${v.lab}: ${o ? "met" : "not met"}`);
+      t.setAttribute("class", "vlab" + (o ? "" : " off"));
+    });
+    const ok = on.a && on.b && on.c;
+    core.setAttribute("fill", ok ? "var(--aqua)" : "var(--deep)"); core.setAttribute("stroke", ok ? "var(--aqua)" : "var(--coral)"); core.setAttribute("stroke-width", 2);
+    coreMark.setAttribute("stroke", ok ? "var(--deep)" : "var(--coral)");
+    coreMark.setAttribute("d", ok ? "M171 177 l6 6 l12 -12" : "M173 170 l14 14 M187 170 l-14 14");
+    const fails = [];
+    if (!on.a) fails.push(`<li><b>(a)</b> Secrecy is lost. A secret leaves no protection after a leak; in India the remedy is weaker once it leaks into a public AI tool.${cite(19)}</li>`);
+    if (!on.b) fails.push(`<li><b>(b)</b> No value from being secret, so it falls outside the TRIPS and DTSA definitions.${cite(5, 7)}</li>`);
+    if (!on.c) fails.push(`<li><b>(c)</b> No reasonable steps. Show them credibly: access controls, NDAs, access logs, clean-room onboarding.${cite(5)}</li>`);
+    $("#verdict").innerHTML = ok
+      ? `<div class="verdict yes">protected.</div><p class="vtext">All three conditions hold under TRIPS Art. 39.2 and Directive 2016/943. In the EU it may still need explaining to a person affected, or showing in confidence to a regulator or court.</p>`
+      : `<div class="verdict no">not protected.</div><div class="vtext">Every condition must hold.<ul>${fails.join("")}</ul></div>`;
+  }
+  drawVenn();
+
+  /* ================= 04 time ================= */
+  const TR = { ai: ["AI Act", "var(--aqua)"], dma: ["DMA", "var(--lilac)"], lit: ["Litigation", "var(--coral)"], law: ["Other law", "var(--amber)"] };
+  const EV = [
+    { d: "2025-02-27", s: "27 Feb 2025", t: "lit", x: "CJEU decides C-203/22 (Dun & Bradstreet Austria)", src: [1] },
+    { d: "2025-03-19", s: "19 Mar 2025", t: "dma", x: "Apple must open iOS/iPadOS interoperability, Art. 6(7)", src: [18] },
+    { d: "2025-08-02", s: "2 Aug 2025", t: "ai", x: "GPAI obligations apply", src: [4], force: "GPAI obligations (AI Act Art. 53)" },
+    { d: "2025-08-20", s: "Aug 2025", t: "dma", x: "Consultation on AI in the first DMA review", src: [17] },
+    { d: "2025-09-12", s: "Sept 2025", t: "law", x: "EU Data Act applies, with a trade-secret safeguard", src: [], force: "EU Data Act" },
+    { d: "2025-11-05", s: "5 Nov 2025", t: "law", x: "India: MeitY AI Governance Guidelines (non-binding)", src: [20], force: "MeitY guidelines (non-binding)" },
+    { d: "2026-01-01", s: "1 Jan 2026", t: "law", x: "California AB 2013 training-data law in force", src: [10], force: "California AB 2013" },
+    { d: "2026-01-27", s: "27 Jan 2026", t: "dma", x: "DMA proceedings opened on Google", src: [16] },
+    { d: "2026-03-04", s: "4 Mar 2026", t: "lit", x: "xAI v. Bonta: preliminary injunction denied", src: [10] },
+    { d: "2026-05-15", s: "May 2026", t: "dma", x: "First DMA review due", src: [17] },
+    { d: "2026-06-15", s: "15 Jun 2026", t: "lit", x: "X.AI v. OpenAI dismissed", src: [12] },
+    { d: "2026-07-16", s: "16 Jul 2026", t: "dma", x: "Google decisions: AI-assistant interoperability; anonymised search data on FRAND terms, not for GPAI training", src: [14, 15] },
+    { d: "2026-07-24", s: "Jul 2026", t: "lit", x: "Apple v. Liu filed (OpenAI a defendant)", src: [13] },
+    { d: "2026-08-02", s: "2 Aug 2026", t: "ai", x: "AI Office fining powers begin", src: [3], force: "AI Office fining powers" },
+    { d: "2026-10-15", s: "Mid-Oct 2026", t: "lit", x: "Apple v. Liu: injunction hearing; ruling pending", src: [13] },
+    { d: "2027-08-02", s: "2 Aug 2027", t: "ai", x: "Older GPAI models must comply", src: [4], force: "GPAI duties for older models" },
+    { d: "2027-08-20", s: "Aug 2027", t: "dma", x: "Google compliance on Android AI-assistant interoperability", src: [14], force: "Google Art. 6(7) AI-assistant interoperability" },
+    { d: "2027-12-02", s: "2 Dec 2027", t: "ai", x: "Annex III high-risk duties apply (Digital Omnibus); Art. 86 likely moves too (verify)", src: [3], force: "Annex III high-risk duties" },
+    { d: "2028-08-02", s: "2 Aug 2028", t: "ai", x: "Annex I high-risk duties apply", src: [3], force: "Annex I high-risk duties" }
+  ];
+  const D0 = Date.UTC(2025, 0, 1), DAY = 864e5, SPAN = Math.round((Date.UTC(2028, 11, 31) - D0) / DAY);
+  const dayOf = s => { const [y, m, d] = s.split("-").map(Number); return Math.round((Date.UTC(y, m - 1, d) - D0) / DAY); };
+  const COMPILED = dayOf("2026-10-22");
+  const now = new Date(); const TODAY = Math.round((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) - D0) / DAY);
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const fmt = n => { const d = new Date(D0 + n * DAY); return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`; };
+  const range = $("#timeRange"); range.max = SPAN; range.value = COMPILED;
+  const ticks = $("#ticks");
+  EV.forEach((e, i) => {
+    const b = el("button", { type: "button", class: "tick", style: `left:${dayOf(e.d) / SPAN * 100}%;color:${TR[e.t][1]};border-color:${TR[e.t][1]}`, "aria-label": `${e.s}: ${e.x}`, title: `${e.s} · ${e.x}` });
+    b.addEventListener("click", () => { range.value = dayOf(e.d); upd(); });
+    ticks.appendChild(b);
+  });
+  const yrs = $("#years");
+  [2025, 2026, 2027, 2028].forEach(y => { const s = el("span", { style: `left:${dayOf(y + "-01-01") / SPAN * 100}%` }, y); yrs.appendChild(s); });
+  function li(e) { return `<li><i style="background:${TR[e.t][1]}"></i><div>${e.x}${e.src.length ? cite(...e.src) : ""}<small>${e.s} · ${TR[e.t][0]}</small></div></li>`; }
+  let lastBucket = -1;
+  function upd() {
+    const n = +range.value;
+    range.style.setProperty("--fill", (n / SPAN * 100) + "%");
+    $("#bigDate").textContent = fmt(n);
+    $("#whenLabel").textContent = n === COMPILED ? "Notes compiled on this date" : n === TODAY ? "Today" : n > COMPILED ? "After the notes were compiled · scheduled, not observed" : "Before the notes were compiled";
+    const past = EV.filter(e => dayOf(e.d) <= n), fut = EV.filter(e => dayOf(e.d) > n);
+    $("#colLatest").innerHTML = past.length ? past.slice(-4).reverse().map(li).join("") : `<li class="empty">Nothing yet. The first entry is 27 Feb 2025.</li>`;
+    const force = past.filter(e => e.force);
+    $("#colForce").innerHTML = force.length ? force.map(e => `<li><i style="background:${TR[e.t][1]}"></i><div>${e.force}<small>since ${e.s}</small></div></li>`).join("") : `<li class="empty">No duty from these notes applies yet.</li>`;
+    $("#colNext").innerHTML = fut.length ? fut.slice(0, 3).map(li).join("") : `<li class="empty">Nothing further scheduled in these notes.</li>`;
+    [...ticks.children].forEach((b, i) => { const d = dayOf(EV[i].d); b.classList.toggle("past", d <= n); b.classList.toggle("on", d === n); });
+    const bucket = past.length; if (bucket !== lastBucket && lastBucket !== -1) spawn(W * (.1 + .8 * n / SPAN), H * .45, .7, "aqua"); lastBucket = bucket;
+  }
+  range.addEventListener("input", upd);
+  document.querySelectorAll("[data-jump]").forEach(b => b.addEventListener("click", () => { range.value = b.dataset.jump === "today" ? Math.min(SPAN, TODAY) : dayOf(b.dataset.jump); upd(); }));
+  upd();
+
+  /* ================= 05 cases ================= */
+  const CASES = [
+    { n: "State v. Loomis", s: "decided", sl: "Decided", m: "881 N.W.2d 749 · Wis. Sup. Ct., 2016", b: "A COMPAS risk score was used at sentencing. Its method is a trade secret, so Loomis could not test it. The court allowed it with five written warnings, but barred its use to decide incarceration or sentence severity.", a: "The classic black-box case.", src: [8] },
+    { n: "ProPublica, “Machine Bias”", s: "evidence", sl: "Evidence", m: "Broward Co., FL · 23 May 2016", b: "More than 7,000 people analysed. Northpointe withheld the calculations as proprietary.", a: "Evidence of what secrecy can hide. The company disputes the analysis.", grid: true, src: [9] },
+    { n: "CK v Dun & Bradstreet Austria", s: "decided", sl: "Decided", m: "C-203/22 · CJEU, 27 Feb 2025", b: "A credit-scoring algorithm was called a trade secret. The Court required an intelligible explanation, with the regulator or court balancing access against the secret.", a: "Binding across the EU.", src: [1] },
+    { n: "xAI v. Bonta", s: "live", sl: "Live", m: "California AB 2013 · C.D. Cal. (Judge Bernal) · 9th Cir. No. 26-1591", b: "xAI says the training-data summary law destroys trade secrets and compels speech. Preliminary injunction denied 4 Mar 2026: the trade-secret showing was too general, and the First Amendment claim not likely enough to succeed. The law has been in force since 1 Jan 2026.", a: "Appeal to the Ninth Circuit pending; the main case continues.", src: [10, 11] },
+    { n: "X.AI v. OpenAI", s: "closed", sl: "Closed", m: "N.D. Cal. (Judge Lin) · dismissed 15 Jun 2026", b: "xAI alleged OpenAI poached staff to get trade secrets. Dismissed: routine recruiting is not inducement, and “mere possession” is not misappropriation. No leave to amend against OpenAI.", a: "Closed against OpenAI; xAI may still pursue some ex-employees. Check for an appeal.", src: [12] },
+    { n: "Apple v. Liu", s: "live", sl: "Live", m: "N.D. Cal. No. 5:26-cv-07078 (Judge Davila) · filed Jul 2026", b: "Apple alleges OpenAI and a former engineer extracted hardware trade secrets through interviews and file downloads, and seeks a preliminary injunction. OpenAI says Apple named no specific secrets and wants dismissal.", a: "Injunction hearing held mid-Oct 2026; ruling pending.", src: [13] }
+  ];
+  const ct = $("#caseTabs");
+  CASES.forEach((c, i) => { const b = el("button", { type: "button", "aria-pressed": String(i === 0) }, `<span class="cn">${c.n}</span><span class="sig ${c.s}">${c.sl}</span>`); b.addEventListener("click", () => showCase(i)); ct.appendChild(b); });
+  const dotgrid = n => `<div class="dotgrid" aria-hidden="true">${Array.from({ length: 100 }, (_, k) => `<i class="${k < n ? "on" : ""}"></i>`).join("")}</div>`;
+  function showCase(i) {
+    [...ct.children].forEach((b, k) => b.setAttribute("aria-pressed", String(k === i)));
+    const c = CASES[i];
+    const g = c.grid ? `<div class="grids" role="img" aria-label="Wrongly flagged high-risk among people who did not reoffend: 44.9 percent of Black defendants, 23.5 percent of white defendants">
+        <div class="grid100"><b class="tnum">44.9%</b><span>Black defendants who did not reoffend, wrongly flagged high-risk (≈45 in 100)</span>${dotgrid(45)}</div>
+        <div class="grid100"><b class="tnum">23.5%</b><span>White defendants who did not reoffend, wrongly flagged high-risk (≈24 in 100)</span>${dotgrid(24)}</div></div>` : "";
+    $("#caseBody").innerHTML = `<span class="sig ${c.s}">${c.sl}</span><h3 style="font-size:1.7rem;font-weight:300;letter-spacing:-.03em">${c.n}</h3><span class="meta">${c.m}</span><p>${c.b}${cite(...c.src)}</p>${g}<p class="after">${c.a}</p>`;
+  }
+  showCase(0);
+
+  /* ================= 06 sorter ================= */
+  const pick = { method: "secret", weights: "secret", data: "secret" };
+  document.querySelectorAll(".flip").forEach(f => {
+    const [p, s] = f.querySelectorAll("button");
+    p.addEventListener("click", () => { pick[f.dataset.k] = "patent"; p.setAttribute("aria-pressed", "true"); s.setAttribute("aria-pressed", "false"); sortOut(); });
+    s.addEventListener("click", () => { pick[f.dataset.k] = "secret"; s.setAttribute("aria-pressed", "true"); p.setAttribute("aria-pressed", "false"); sortOut(); });
+  });
+  function sortOut() {
+    const o = $("#sortOut");
+    if (pick.method === "patent" && pick.weights === "secret" && pick.data === "secret") o.innerHTML = `<b>That is the hybrid in these notes.</b> Patent the method, which publishes it in exchange for protection that survives disclosure. Hold weights and data as secrets, and be ready to show regulators what they need.`;
+    else if (pick.method === "secret" && pick.weights === "secret" && pick.data === "secret") o.innerHTML = `<b>All secret.</b> Nothing is published, but secrecy invites transparency mandates and leaves no protection after a leak. The notes suggest patenting the method.`;
+    else o.innerHTML = `<b>Weights or data as patents?</b> Weights and training data are rarely patentable or worth publishing in a patent; that is why firms keep them secret. The notes' hybrid holds both as secrets.`;
+  }
+  sortOut();
+
+  /* ================= 07 SDG balance ================= */
+  const sc = $("#scaleSvg");
+  sc.innerHTML = `
+    <path d="M300 92 L300 262" class="str" style="stroke:var(--text);stroke-width:3"></path>
+    <path d="M250 270 L350 270 L300 236 Z" fill="var(--deep-2)" stroke="var(--text)" stroke-width="2"></path>
+    <g id="beamG"><line id="beam" class="beam" x1="90" y1="92" x2="510" y2="92"></line></g>
+    <circle cx="300" cy="92" r="7" fill="var(--text)"></circle>
+    <g id="panL"><line class="str" x1="0" y1="0" x2="-44" y2="74"></line><line class="str" x1="0" y1="0" x2="44" y2="74"></line><path class="pan" d="M-62 74 Q0 116 62 74 Z" fill="color-mix(in srgb, var(--coral) 22%, var(--deep))" stroke="var(--coral)"></path><text class="scl" x="0" y="148" text-anchor="middle" fill="var(--coral)">SDG 9</text><text class="scs" x="0" y="166" text-anchor="middle">9.5 innovation</text></g>
+    <g id="panR"><line class="str" x1="0" y1="0" x2="-44" y2="74"></line><line class="str" x1="0" y1="0" x2="44" y2="74"></line><path class="pan" d="M-62 74 Q0 116 62 74 Z" fill="color-mix(in srgb, var(--aqua) 22%, var(--deep))" stroke="var(--aqua)"></path><text class="scl" x="0" y="148" text-anchor="middle" fill="var(--aqua)">SDG 16 · 10</text><text class="scs" x="0" y="166" text-anchor="middle">16.3 · 16.6 · 16.10 · 10.3</text></g>`;
+  const bal = $("#balRange");
+  function balance() {
+    const v = +bal.value;
+    const a = (50 - v) / 50 * 13 * Math.PI / 180;
+    const L = 210, cx = 300, cy = 92;
+    const lx = cx - L * Math.cos(a), ly = cy + L * Math.sin(a);
+    const rx = cx + L * Math.cos(a), ry = cy - L * Math.sin(a);
+    $("#beam").setAttribute("x1", lx); $("#beam").setAttribute("y1", ly); $("#beam").setAttribute("x2", rx); $("#beam").setAttribute("y2", ry);
+    $("#panL").setAttribute("transform", `translate(${lx} ${ly})`); $("#panR").setAttribute("transform", `translate(${rx} ${ry})`);
+    bal.style.setProperty("--fill", v + "%");
+    let z;
+    if (v < 30) z = { t: "Total secrecy", c: "var(--coral)", p: "Protects R&D incentives (9.5), but blocks the scrutiny behind accountable institutions (16.6), public access to information (16.10), equal access to justice (16.3) and equal treatment (10.3). Loomis is the picture of this end." };
+    else if (v > 70) z = { t: "Full publication", c: "var(--aqua)", p: "Maximum scrutiny for 16.6, 16.10, 16.3 and 10.3, but secrecy no longer protects R&D incentives (9.5), and there is nothing left to hold back from competitors." };
+    else z = { t: "Controlled disclosure", c: "var(--text)", p: "Secrets stay protected from competitors, while regulators, courts and affected people see enough to hold the system to account. Balance, not abolition, is the argument." };
+    $("#zone").innerHTML = `<span class="tag">Position ${v} of 100</span><div class="zt" style="color:${z.c}">${z.t}</div><p>${z.p}${cite(21)}</p>`;
+  }
+  bal.addEventListener("input", balance);
+  balance();
+
+  /* ================= 08 checks ================= */
+  const CHECKS = [
+    `Pull the docket for <b>xAI v. Bonta</b> (<span class="mono">9th Cir. No. 26-1591</span>) before quoting dates.`,
+    `Pull the docket for <b>Apple v. Liu</b> (<span class="mono">N.D. Cal. No. 5:26-cv-07078</span>); the injunction ruling was pending on 22 Oct 2026.`,
+    `Check whether xAI appealed the dismissal in <b>X.AI v. OpenAI</b>.`,
+    `Verify whether <b>AI Act Art. 86</b> moves with Annex III to 2 Dec 2027.`,
+    `Confirm the question meant the <b>Digital Markets Act</b>, and check the Commission decisions for trade-secret language.`,
+    `Check the <b>Data Act</b> (applies Sept 2025) and its trade-secret safeguard for data sharing.`,
+    `When citing ProPublica, say that the company disputes the analysis.`
+  ];
+  const KEY = "secrecy-ripple-checks";
+  let saved = []; try { saved = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) {}
+  const cl = $("#checkList");
+  CHECKS.forEach((t, i) => { const l = el("label", { class: "check" }, `<input type="checkbox" id="rc-${i}" ${saved.includes(i) ? "checked" : ""}><span>${t}</span>`); cl.appendChild(l); });
+  function prog() {
+    const bx = [...cl.querySelectorAll("input")], onIdx = bx.map((b, i) => b.checked ? i : -1).filter(i => i >= 0);
+    $("#progTxt").textContent = `${onIdx.length} of ${bx.length} cleared`;
+    $("#progArc").setAttribute("stroke-dashoffset", 138.2 * (1 - onIdx.length / bx.length));
+    try { localStorage.setItem(KEY, JSON.stringify(onIdx)); } catch (e) {}
+  }
+  cl.addEventListener("change", e => { prog(); if (e.target.checked) { const r = e.target.getBoundingClientRect(); spawn(r.left + 12, r.top + 12, .8); } });
+  $("#clearChecks").addEventListener("click", () => { cl.querySelectorAll("input").forEach(b => b.checked = false); prog(); });
+  prog();
+
+  /* ================= sources ================= */
+  const SRC = [
+    ["A&O Shearman. (2025). CJEU issues judgment on balancing the right of access and protecting trade secrets.", ["aoshearman.com/en/insights/ao-shearman-on-data/cjeu-issues-judgment-on-balancing-the-right-of-access-and-protecting-trade-secrets"]],
+    ["AI Act Explorer. (n.d.). Articles 53, 78, 86, Regulation (EU) 2024/1689.", ["artificialintelligenceact.eu/article/53", "artificialintelligenceact.eu/article/78", "artificialintelligenceact.eu/article/86"]],
+    ["Orrick. (2026, July 29). EU AI Act update: Digital Omnibus finalizes 8 compliance changes.", ["orrick.com/en/Insights/2026/07/EU-AI-Act-Update-Digital-Omnibus-Finalizes-8-Compliance-Changes"]],
+    ["Latham & Watkins. (2025). EU AI Act: GPAI model obligations in force and final GPAI Code of Practice in place.", ["lw.com/en/insights/eu-ai-act-gpai-model-obligations-in-force-and-final-gpai-code-of-practice-in-place"]],
+    ["World Trade Organization. (n.d.). TRIPS Agreement, Article 39.", ["wto.org/english/docs_e/legal_e/27-trips_04d_e.htm"]],
+    ["Directive (EU) 2016/943 on the protection of undisclosed know-how and business information.", ["eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016L0943"]],
+    ["18 U.S.C. §1839 (Defend Trade Secrets Act definitions).", ["law.cornell.edu/uscode/text/18/1839"]],
+    ["Harvard Law Review. (2017). State v. Loomis, 130 Harv. L. Rev. 1530.", ["harvardlawreview.org/2017/03/state-v-loomis/"]],
+    ["Angwin, J., Larson, J., Mattu, S., & Kirchner, L. (2016, May 23). Machine bias. ProPublica.", ["propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing"]],
+    ["PPC Land. (2026). Court denies xAI's bid to block California AI training data law.", ["ppc.land/court-denies-xais-bid-to-block-california-ai-training-data-law/"]],
+    ["IAPP. (2026, April 15). xAI v. Bonta: A constitutional clash for training data transparency.", ["iapp.org/news/a/xai-v-bonta-a-constitutional-clash-for-training-data-transparency"]],
+    ["Courthouse News. (2026). Judge tosses xAI claims that OpenAI stole trade secrets.", ["courthousenews.com/judge-tosses-xai-claims-that-openai-stole-trade-secrets/"]],
+    ["Claims Journal. (2026, October 14). Apple, OpenAI head to court in high-stakes AI trade secret fight.", ["claimsjournal.com/news/national/2026/10/14/340709.htm"]],
+    ["Wolters Kluwer Competition Blog. (2026, July 22). Keeping the gate: Specification decision on Alphabet OS interoperability with AI assistants.", ["legalblogs.wolterskluwer.com/competition-blog/"]],
+    ["Relevant Audience. (2026). EU orders Google to share Search data with rival engines and AI chatbots.", ["relevantaudience.com/seo/eu-orders-google-share-search-data-rivals/"]],
+    ["RPC. (2026). EU Commission opens proceedings to aid Google in complying with the DMA.", ["rpclegal.com/snapshots/technology-digital/spring-2026/"]],
+    ["MLex. (2025, August 26). Tech companies see EU Commission target AI in upcoming gatekeeper law review.", ["mlex.com/mlex/articles/2380957"]],
+    ["Article 19. (2025). DMA: Reaction to Commission's decision on requesting Apple interoperability.", ["article19.org/resources/"]],
+    ["Bar & Bench. (n.d.). The hidden cost of Ctrl+V: Trade secrets, AI and limited remedies.", ["barandbench.com/columns/the-hidden-cost-of-ctrlv-trade-secrets-ai-and-the-limits-of-remedy"]],
+    ["SCC Online. (2025, November 6). MeitY launches India AI Governance Guidelines.", ["scconline.com/blog/post/2025/11/06/"]],
+    ["United Nations. (n.d.). Goals 9, 10 and 16.", ["sdgs.un.org/goals/goal16"]]
+  ];
+  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const sl = $("#srcList");
+  SRC.forEach(([t, u], i) => sl.appendChild(el("li", { id: "src-" + (i + 1) }, `<span class="n">${i + 1}</span><div>${esc(t)}<br>${u.map(x => `<a href="https://${x}" target="_blank" rel="noopener">${esc(x)}</a>`).join("<br>")}</div>`)));
+  const drawer = $("#drawer"), scrim = $("#scrim");
+  let lastFocus = null;
+  function openDrawer(n) {
+    lastFocus = document.activeElement;
+    drawer.classList.add("open"); drawer.setAttribute("aria-hidden", "false"); scrim.hidden = false;
+    $("#closeSources").focus();
+    if (n) { const li = $("#src-" + n); li.scrollIntoView({ block: "center" }); li.classList.add("flash"); setTimeout(() => li.classList.remove("flash"), 1600); }
+  }
+  function closeDrawer() { drawer.classList.remove("open"); drawer.setAttribute("aria-hidden", "true"); scrim.hidden = true; if (lastFocus) lastFocus.focus(); }
+  $("#openSources").addEventListener("click", () => openDrawer());
+  $("#openSources2").addEventListener("click", () => openDrawer());
+  $("#closeSources").addEventListener("click", closeDrawer);
+  scrim.addEventListener("click", closeDrawer);
+  document.addEventListener("click", e => { const c = e.target.closest(".cite"); if (c) { e.preventDefault(); openDrawer(+c.dataset.src); } });
+
+  /* ================= boot ================= */
+  const start = ids.indexOf(location.hash.slice(1));
+  cur = -1; go(start >= 0 ? start : 0, true);
+  addEventListener("load", () => setTimeout(() => scrollTo(0, 0), 0));
+})();
+</script>
+
+</body></html>
